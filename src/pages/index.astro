@@ -1,11 +1,311 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import probe from "probe-image-size";
+import { fetchItems } from "../api/fetchItems";
+import { fetchSiteContent } from "../api/fetchSiteContent";
+import "/src/styles/global.css";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const items = await fetchItems();
+const siteContent = await fetchSiteContent();
+const categories = [...new Set(items.map((item) => item.category))];
+
+const today = new Date();
+const formattedDate = today.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+const gallery = await Promise.all(
+  items.map(async (item) => {
+    const sizes = await Promise.all(item.images.map((img) => probe(img)));
+    return { images: item.images, sizes };
+  })
+);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{siteContent.siteTitle} - Quality Furniture & Items</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-8 h-8 text-blue-800"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+              ></path>
+            </svg>
+            <h1 class="text-2xl font-bold text-gray-900">
+              {siteContent.siteTitle}
+            </h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="#contact"
+              class="text-blue-800 hover:text-blue-700 font-medium">Contact</a
+            >
+            <a
+              href="#items"
+              class="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View Items
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+          {siteContent.heroTitle}
+        </h2>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          {siteContent.heroSubtitle}
+        </p>
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <div class="flex items-center space-x-2 text-green-600">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span class="font-medium">All items available for viewing</span>
+          </div>
+          <div class="flex items-center space-x-2 text-green-600">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span class="font-medium">Cash or Venmo accepted</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-8 bg-white border-b" id="items">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button
+            id="filter-all"
+            class="filter-btn active bg-blue-900 text-white px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:opacity-80 transition-colors"
+          >
+            All Items
+          </button>
+          {
+            categories.map((category) => (
+              <button
+                id={`filter-${category.toLowerCase().replace(" ", "-")}`}
+                class="filter-btn px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:opacity-80 transition-colors"
+              >
+                {category}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Items Grid -->
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          id="items-grid"
+        >
+          {
+            items.map((item, i) => (
+              <div
+                id="my-gallery"
+                class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? "opacity-50" : ""}`}
+                data-category={item.category.toLowerCase().replace(" ", "-")}
+              >
+                {gallery[i].images.map((href, j) => (
+                  <a
+                    class="aspect-w-16 aspect-h-12 bg-gray-200 cursor-pointer"
+                    href={href}
+                    data-cropped="true"
+                    data-pswp-width={gallery[i].sizes[j].width}
+                    data-pswp-height={gallery[i].sizes[j].height}
+                    target="_blank"
+                    hidden={j > 0}
+                  >
+                    <img
+                      src={href}
+                      alt={item.name}
+                      class="w-full h-48 object-cover"
+                      loading="lazy"
+                      referrerpolicy="no-referrer"
+                      data-cropped="true"
+                    />
+                  </a>
+                ))}
+
+                <div
+                  class={`p-6 ${item.sold ? "line-through text-gray-500" : ""}`}
+                >
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class={`text-lg font-semibold text-gray-900`}>
+                      {item.name}
+                    </h3>
+                    <span class="text-2xl font-bold text-blue-800">
+                      ${item.price}
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-4 mb-3">
+                    <span class="text-sm text-gray-500">{item.category}</span>
+                    <span
+                      class={`px-2 py-1 rounded-full text-xs font-medium ${
+                        item.condition === "excellent"
+                          ? "bg-green-100 text-green-800"
+                          : item.condition === "good"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-orange-100 text-orange-800"
+                      }`}
+                    >
+                      {item.condition}
+                    </span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-3">{item.description}</p>
+                  <p class="text-xs text-gray-500 mb-4">
+                    Dimensions: {item.dimensions}
+                  </p>
+                  <button class="w-full  bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    Inquire About Item
+                  </button>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-900 text-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-8">Get In Touch</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
+            <div class="flex items-center space-x-3">
+              <svg
+                class="w-5 h-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                ></path>
+                <path
+                  d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                ></path>
+              </svg>
+              <span id="contact-email">{siteContent.contactEmail}</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <svg
+                class="w-5 h-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                ></path>
+              </svg>
+              <span id="contact-phone">{siteContent.contactPhone}</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-xl font-semibold mb-4">Viewing Information</h3>
+            <p class="text-gray-300" id="viewing-info">
+              {siteContent.viewingInfo}
+            </p>
+            <p class="text-gray-300">
+              Located in <span id="location">{siteContent.location}</span><br />
+              Exact address provided upon contact.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-sm">Last updated: {formattedDate}</p>
+      </div>
+    </footer>
+
+    <script>
+      // Filter functionality
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      const itemCards = document.querySelectorAll<HTMLElement>(".item-card");
+
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Update active button
+          filterButtons.forEach((btn) =>
+            btn.classList.remove("active", "bg-blue-900", "text-white")
+          );
+          button.classList.add("active", "bg-blue-900", "text-white");
+
+          // Get filter category
+          const filter = button.id.replace("filter-", "");
+
+          // Show/hide items
+          itemCards.forEach((card) => {
+            if (filter === "all" || card.dataset.category === filter) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Item inquiry handling
+      document.querySelectorAll(".item-card button").forEach((button) => {
+        button.addEventListener("click", function () {
+          const itemCard = this.closest(".item-card");
+          const itemName = itemCard.querySelector("h3").textContent;
+          const itemPrice = itemCard.querySelector(".text-2xl").textContent;
+
+          // You can customize this to open email client, WhatsApp, or your preferred contact method
+          const subject = encodeURIComponent(`Inquiry about ${itemName}`);
+          const body = encodeURIComponent(
+            `Hi! I'm interested in the ${itemName} listed for ${itemPrice}. Is it still available?`
+          );
+
+          window.location.href = `mailto:housesale2024@email.com?subject=${subject}&body=${body}`;
+        });
+      });
+    </script>
+
+    <script>
+      import "../scripts/load-gallery.js";
+    </script>
+  </body>
+</html>
