@@ -11,13 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
-
-      - run: yarn install --frozen-lockfile
-
-      - run: yarn build
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
         env:
-          NOTION_API_KEY: ${{secrets.SHEETS_API_KEY}}
-          DATABASE_ID: ${{secrets.SPREADSHEET_ID}}
+          SHEETS_API_KEY: ${{secrets.SHEETS_API_KEY}}
+          SPREADSHEET_ID: ${{secrets.SPREADSHEET_ID}}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
