@@ -26,7 +26,7 @@ export async function fetchItems(): Promise<Item[]> {
         description: row[4] || "",
         newProductUrl: row[5] || "",
         sold: row[6] === "TRUE",
-        images: row.slice(7, 7 + 5),
+        images: row.slice(7, 7 + 5).filter(Boolean),
       }))
       .filter((item) => item.name);
   } catch (error) {

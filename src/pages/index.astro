@@ -3,6 +3,8 @@ import probe from "probe-image-size";
 import { fetchItems } from "../api/fetchItems";
 import { fetchSiteContent } from "../api/fetchSiteContent";
 import "/src/styles/global.css";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 
 const items = await fetchItems();
 const siteContent = await fetchSiteContent();
@@ -11,11 +13,6 @@ const categories = [
 ];
 
 const today = new Date();
-const formattedDate = today.toLocaleDateString("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
 
 const gallery = await Promise.all(
   items.map(async (item) => {
@@ -47,27 +44,37 @@ const gallery = await Promise.all(
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-4">
           <div class="flex items-center space-x-2">
-            <svg
+            <Icon
+              name="mdi:home"
               class="w-8 h-8 text-blue-800"
               fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
-              ></path>
-            </svg>
+            />
+
             <h1 class="text-2xl font-bold text-gray-900">
               {siteContent.siteTitle}
             </h1>
           </div>
           <div class="flex items-center space-x-4">
-            <a
-              href="#contact"
-              class="text-blue-800 hover:text-blue-700 font-medium">Contact</a
+            <button
+              id="audioToggle"
+              class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 bg-red-600 text-white font-medium hover:bg-red-700 border border-red-600 relative group"
             >
+              <Icon name="mdi:play" class="w-4 h-4" fill="currentColor" />
+              <span>Play Music</span>
+              <!-- Tooltip -->
+              <div
+                class="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-sm rounded-lg px-3 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap pointer-events-none"
+              >
+                Enhance your shopping experience
+                <div
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"
+                >
+                </div>
+              </div>
+            </button>
             <a
               href="#items"
-              class="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              class="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors hidden sm:inline-block"
             >
               View Items
             </a>
@@ -75,6 +82,12 @@ const gallery = await Promise.all(
         </div>
       </div>
     </header>
+
+    <!-- Audio Element -->
+    <audio id="backgroundAudio" preload="metadata" loop>
+      <source src="/house-sale-sheets/donki.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
 
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
@@ -89,22 +102,12 @@ const gallery = await Promise.all(
           class="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <div class="flex items-center space-x-2 text-green-600">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
+            <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
             <span class="font-medium">All items available for viewing</span>
           </div>
           <div class="flex items-center space-x-2 text-green-600">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
-            <span class="font-medium">Cash or Venmo accepted</span>
+            <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
+            <span class="font-medium">Cash or PayPal accepted</span>
           </div>
         </div>
       </div>
@@ -144,30 +147,35 @@ const gallery = await Promise.all(
           {
             items.map((item, i) => (
               <div
-                id="my-gallery"
                 class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? "opacity-50" : ""}`}
                 data-category={item.category.toLowerCase().replace(" ", "-")}
               >
-                {gallery[i].images.map((href, j) => (
-                  <a
-                    class="aspect-w-16 aspect-h-12 bg-gray-200 cursor-pointer"
-                    href={href}
-                    data-cropped="true"
-                    data-pswp-width={gallery[i].sizes[j].width}
-                    data-pswp-height={gallery[i].sizes[j].height}
-                    target="_blank"
-                    hidden={j > 0}
-                  >
-                    <img
-                      src={href}
-                      alt={item.name}
-                      class="w-full h-48 object-cover"
-                      loading="lazy"
-                      referrerpolicy="no-referrer"
-                      data-cropped="true"
-                    />
-                  </a>
-                ))}
+                <div id="my-gallery">
+                  {gallery[i].images.map((href, j) => {
+                    const { width, height } = gallery[i].sizes[j];
+                    return (
+                      <a
+                        class="aspect-w-16 aspect-h-12 bg-gray-200 cursor-pointer"
+                        href={href}
+                        data-cropped="true"
+                        data-pswp-width={width}
+                        data-pswp-height={height}
+                        target="_blank"
+                        hidden={j > 0}
+                      >
+                        <Image
+                          src={href}
+                          alt={item.name}
+                          class="w-full h-48 object-cover"
+                          width={width}
+                          height={height}
+                          loading="lazy"
+                          referrerpolicy="no-referrer"
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
 
                 <div
                   class={`p-6 ${item.sold ? "line-through text-gray-500" : ""}`}
@@ -195,14 +203,20 @@ const gallery = await Promise.all(
                     </span>
                   </div>
                   <p class="text-gray-600 text-sm mb-3">{item.description}</p>
-                  <a
-                    class="text-blue-600 mb-3 hover:underline text-sm"
-                    target="_blank"
-                    href={item.newProductUrl}
+                  <p class="mb-3 text-sm">
+                    <a
+                      class="text-blue-600 hover:underline text-sm cursor-pointer"
+                      target="_blank"
+                      href={item.newProductUrl}
+                    >
+                      View New Product
+                    </a>
+                  </p>
+                  <button
+                    class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? "cursor-not-allowed opacity-50" : ""}`}
+                    data-number={siteContent.whatsAppNumber}
+                    disabled={item.sold}
                   >
-                    View New Product
-                  </a>
-                  <button class="w-full  bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
                     Inquire About Item
                   </button>
                 </div>
@@ -213,109 +227,117 @@ const gallery = await Promise.all(
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-gray-900 text-white">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-8">Get In Touch</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-4">
-            <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
-            <div class="flex items-center space-x-3">
-              <svg
-                class="w-5 h-5 text-blue-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                ></path>
-                <path
-                  d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                ></path>
-              </svg>
-              <span id="contact-email">{siteContent.contactEmail}</span>
-            </div>
-            <div class="flex items-center space-x-3">
-              <svg
-                class="w-5 h-5 text-blue-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                ></path>
-              </svg>
-              <span id="contact-phone">{siteContent.contactPhone}</span>
-            </div>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-xl font-semibold mb-4">Viewing Information</h3>
-            <p class="text-gray-300" id="viewing-info">
-              {siteContent.viewingInfo}
-            </p>
-            <p class="text-gray-300">
-              Located in <span id="location">{siteContent.location}</span><br />
-              Exact address provided upon contact.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-300 py-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p class="text-sm">Last updated: {formattedDate}</p>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+        <p>
+          Last updated: {
+            today.toLocaleDateString("en-US", {
+              hour: "2-digit",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </p>
+        <p class="mt-2">
+          Made with extra time at work by <a
+            href="https://emasuriano.com/"
+            class="underline cursor-pointer">EmaSuriano</a
+          >
+        </p>
       </div>
-    </footer>
 
-    <script>
-      // Filter functionality
-      const filterButtons = document.querySelectorAll(".filter-btn");
-      const itemCards = document.querySelectorAll<HTMLElement>(".item-card");
+      <script>
+        import JSConfetti from "js-confetti";
+        const jsConfetti = new JSConfetti();
 
-      filterButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          // Update active button
-          filterButtons.forEach((btn) =>
-            btn.classList.remove("active", "bg-blue-900", "text-white")
-          );
-          button.classList.add("active", "bg-blue-900", "text-white");
+        // Audio toggle functionality
+        const audioToggle = document.getElementById("audioToggle")!;
+        const backgroundAudio = document.getElementById(
+          "backgroundAudio"
+        ) as HTMLAudioElement;
+        let isPlaying = false;
 
-          // Get filter category
-          const filter = button.id.replace("filter-", "");
+        const confettiMachine = () => {
+          if (!isPlaying) return;
+          jsConfetti
+            .addConfetti({
+              emojis: ["🏠", "🛋️", "🪑", "🛏️", "🖼️", "💸", "💰", "🎉", "✨"],
+              emojiSize: 50,
+            })
+            .then(() => setTimeout(confettiMachine, 1000));
+        };
 
-          // Show/hide items
-          itemCards.forEach((card) => {
-            if (filter === "all" || card.dataset.category === filter) {
-              card.style.display = "block";
-            } else {
-              card.style.display = "none";
-            }
+        audioToggle.addEventListener("click", () => {
+          if (isPlaying) {
+            backgroundAudio.pause();
+            audioToggle.innerHTML =
+              '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Play Music</span>';
+            isPlaying = false;
+          } else {
+            backgroundAudio
+              .play()
+              .then(confettiMachine)
+              .catch(() => {
+                console.log("Audio play failed - user interaction required");
+              });
+            audioToggle.innerHTML =
+              '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span>Pause Music</span>';
+            isPlaying = true;
+          }
+        });
+
+        // Filter functionality
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const itemCards = document.querySelectorAll<HTMLElement>(".item-card");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // Update active button
+            filterButtons.forEach((btn) =>
+              btn.classList.remove("active", "bg-blue-900", "text-white")
+            );
+            button.classList.add("active", "bg-blue-900", "text-white");
+
+            // Get filter category
+            const filter = button.id.replace("filter-", "");
+
+            // Show/hide items
+            itemCards.forEach((card) => {
+              if (filter === "all" || card.dataset.category === filter) {
+                card.style.display = "block";
+              } else {
+                card.style.display = "none";
+              }
+            });
           });
         });
-      });
 
-      // Item inquiry handling
-      document.querySelectorAll(".item-card button").forEach((button) => {
-        button.addEventListener("click", function () {
-          const itemCard = this.closest(".item-card");
-          const itemName = itemCard.querySelector("h3").textContent;
-          const itemPrice = itemCard.querySelector(".text-2xl").textContent;
+        // Item inquiry handling
+        document.querySelectorAll(".item-card button").forEach((button) => {
+          button.addEventListener("click", function (this: HTMLElement) {
+            const itemCard = this.closest(".item-card")!;
+            const itemName = itemCard.querySelector("h3")?.textContent;
+            const itemPrice = itemCard.querySelector(".text-2xl")?.textContent;
+            const body = encodeURIComponent(
+              `Hey 👋 I'm interested in the ${itemName?.trim()} listed for ${itemPrice?.trim()}. Is it still available?`
+            );
+            const number = this.dataset.number;
 
-          // You can customize this to open email client, WhatsApp, or your preferred contact method
-          const subject = encodeURIComponent(`Inquiry about ${itemName}`);
-          const body = encodeURIComponent(
-            `Hi! I'm interested in the ${itemName} listed for ${itemPrice}. Is it still available?`
-          );
+            if (!number) {
+              return alert(
+                "WhatsApp number not found. Please contact us directly."
+              );
+            }
 
-          window.location.href = `mailto:housesale2024@email.com?subject=${subject}&body=${body}`;
+            window.open(`https://wa.me/${number}?text=${body}`, "_blank");
+          });
         });
-      });
-    </script>
+      </script>
 
-    <script>
-      import "../scripts/load-gallery.js";
-    </script>
+      <script>
+        import "../scripts/load-gallery.js";
+      </script>
+    </footer>
   </body>
 </html>
