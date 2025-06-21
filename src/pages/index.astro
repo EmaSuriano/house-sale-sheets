@@ -5,6 +5,7 @@ import { fetchSiteContent } from "../api/fetchSiteContent";
 import "/src/styles/global.css";
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import Popover from "../components/Popover.astro";
 import { LinkPreview } from "astro-embed";
 
 const items = await fetchItems();
@@ -115,7 +116,7 @@ const gallery = await Promise.all(
     </section>
 
     <!-- Filter Section -->
-    <section class="py-8 bg-white border-b" id="items">
+    <section class="py-8 bg-white" id="items">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-wrap gap-2 justify-center">
           <button
@@ -216,32 +217,20 @@ const gallery = await Promise.all(
                       {item.condition}
                     </span>
                   </div>
-                  <p class="text-gray-600 text-sm mb-3">{item.description}</p>
+                  <p class="text-gray-600 text-sm ">{item.description}</p>
 
                   {item.newProductUrl ? (
-                    <section class="grid">
-                      <label>
-                        <input
-                          class="peer/showLabel absolute scale-0"
-                          type="checkbox"
-                        />
-                        <span class="block max-h-14 max-w-xs overflow-hidden transition-all duration-300 peer-checked/showLabel:max-h-100">
-                          <p class="flex h-14 cursor-pointer items-center underline text-blue-600 hover:text-blue-800">
-                            View New Product
-                          </p>
-                          <div class="p-4">
-                            <LinkPreview id={item.newProductUrl} />
-                          </div>
-                        </span>
-                      </label>
-                    </section>
+                    <Popover id="default-popover" trigger="View new product">
+                      <LinkPreview id={item.newProductUrl} />
+                    </Popover>
                   ) : (
-                    <p class="h-14" />
+                    <p class="h-12" />
                   )}
                   <button
                     class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? "cursor-not-allowed opacity-50" : ""}`}
                     data-number={siteContent.whatsAppNumber}
                     disabled={item.sold}
+                    id="inquire-button"
                   >
                     Inquire About Item
                   </button>
@@ -340,25 +329,28 @@ const gallery = await Promise.all(
         });
 
         // Item inquiry handling
-        document.querySelectorAll(".item-card button").forEach((button) => {
-          button.addEventListener("click", function (this: HTMLElement) {
-            const itemCard = this.closest(".item-card")!;
-            const itemName = itemCard.querySelector("h3")?.textContent;
-            const itemPrice = itemCard.querySelector(".text-2xl")?.textContent;
-            const body = encodeURIComponent(
-              `Hey 👋 I'm interested in the ${itemName?.trim()} listed for ${itemPrice?.trim()}. Is it still available?`
-            );
-            const number = this.dataset.number;
-
-            if (!number) {
-              return alert(
-                "WhatsApp number not found. Please contact us directly."
+        document
+          .querySelectorAll(".item-card #inquire-button")
+          .forEach((button) => {
+            button.addEventListener("click", function (this: HTMLElement) {
+              const itemCard = this.closest(".item-card")!;
+              const itemName = itemCard.querySelector("h3")?.textContent;
+              const itemPrice =
+                itemCard.querySelector(".text-2xl")?.textContent;
+              const body = encodeURIComponent(
+                `Hey 👋 I'm interested in the ${itemName?.trim()} listed for ${itemPrice?.trim()}. Is it still available?`
               );
-            }
+              const number = this.dataset.number;
 
-            window.open(`https://wa.me/${number}?text=${body}`, "_blank");
+              if (!number) {
+                return alert(
+                  "WhatsApp number not found. Please contact us directly."
+                );
+              }
+
+              window.open(`https://wa.me/${number}?text=${body}`, "_blank");
+            });
           });
-        });
 
         document
           .getElementById("filter-sold-items")!
