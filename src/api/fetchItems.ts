@@ -7,7 +7,7 @@ export interface Item {
   category: string;
   condition: "excellent" | "good" | "fair";
   description: string;
-  newProductUrl: string;
+  newProductUrl?: string;
   sold: boolean;
   images: string[];
 }

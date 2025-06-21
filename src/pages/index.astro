@@ -5,6 +5,7 @@ import { fetchSiteContent } from "../api/fetchSiteContent";
 import "/src/styles/global.css";
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import { LinkPreview } from "astro-embed";
 
 const items = await fetchItems();
 const siteContent = await fetchSiteContent();
@@ -133,6 +134,20 @@ const gallery = await Promise.all(
               </button>
             ))
           }
+
+          <label class="inline-flex items-center cursor-pointer ml-auto">
+            <input
+              type="checkbox"
+              checked
+              class="sr-only peer"
+              id="filter-sold-items"
+            />
+            <div
+              class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"
+            >
+            </div>
+            <span class="ms-3 text-sm font-medium">Hide sold</span>
+          </label>
         </div>
       </div>
     </section>
@@ -147,8 +162,9 @@ const gallery = await Promise.all(
           {
             items.map((item, i) => (
               <div
-                class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? "opacity-50" : ""}`}
+                class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? "hidden opacity-50 cursor-not-allowed" : ""}`}
                 data-category={item.category.toLowerCase().replace(" ", "-")}
+                data-sold={item.sold}
               >
                 <div id="my-gallery">
                   {gallery[i].images.map((href, j) => {
@@ -177,9 +193,7 @@ const gallery = await Promise.all(
                   })}
                 </div>
 
-                <div
-                  class={`p-6 ${item.sold ? "line-through text-gray-500" : ""}`}
-                >
+                <div class={`p-6`}>
                   <div class="flex justify-between items-start mb-2">
                     <h3 class={`text-lg font-semibold text-gray-900`}>
                       {item.name}
@@ -203,15 +217,27 @@ const gallery = await Promise.all(
                     </span>
                   </div>
                   <p class="text-gray-600 text-sm mb-3">{item.description}</p>
-                  <p class="mb-3 text-sm">
-                    <a
-                      class="text-blue-600 hover:underline text-sm cursor-pointer"
-                      target="_blank"
-                      href={item.newProductUrl}
-                    >
-                      View New Product
-                    </a>
-                  </p>
+
+                  {item.newProductUrl ? (
+                    <section class="grid">
+                      <label>
+                        <input
+                          class="peer/showLabel absolute scale-0"
+                          type="checkbox"
+                        />
+                        <span class="block max-h-14 max-w-xs overflow-hidden transition-all duration-300 peer-checked/showLabel:max-h-100">
+                          <p class="flex h-14 cursor-pointer items-center underline text-blue-600 hover:text-blue-800">
+                            View New Product
+                          </p>
+                          <div class="p-4">
+                            <LinkPreview id={item.newProductUrl} />
+                          </div>
+                        </span>
+                      </label>
+                    </section>
+                  ) : (
+                    <p class="h-14" />
+                  )}
                   <button
                     class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? "cursor-not-allowed opacity-50" : ""}`}
                     data-number={siteContent.whatsAppNumber}
@@ -333,6 +359,18 @@ const gallery = await Promise.all(
             window.open(`https://wa.me/${number}?text=${body}`, "_blank");
           });
         });
+
+        document
+          .getElementById("filter-sold-items")!
+          .addEventListener("change", function (this: HTMLInputElement) {
+            itemCards.forEach((card) => {
+              if (this.checked && card.dataset.sold === "true") {
+                card.style.display = "none";
+              } else {
+                card.style.display = "block";
+              }
+            });
+          });
       </script>
 
       <script>
