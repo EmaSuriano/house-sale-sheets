@@ -1,12 +1,12 @@
 ---
-import probe from "probe-image-size";
-import { fetchItems } from "../api/fetchItems";
-import { fetchSiteContent } from "../api/fetchSiteContent";
-import "/src/styles/global.css";
-import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
-import Popover from "../components/Popover.astro";
-import { LinkPreview } from "astro-embed";
+import probe from 'probe-image-size';
+import { fetchItems } from '../api/fetchItems';
+import { fetchSiteContent } from '../api/fetchSiteContent';
+import '/src/styles/global.css';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Popover from '../components/Popover.astro';
+import { LinkPreview } from 'astro-embed';
 
 const items = await fetchItems();
 const siteContent = await fetchSiteContent();
@@ -20,7 +20,7 @@ const gallery = await Promise.all(
   items.map(async (item) => {
     const sizes = await Promise.all(item.images.map((img) => probe(img)));
     return { images: item.images, sizes };
-  })
+  }),
 );
 ---
 
@@ -128,7 +128,7 @@ const gallery = await Promise.all(
           {
             categories.map((category) => (
               <button
-                id={`filter-${category.toLowerCase().replace(" ", "-")}`}
+                id={`filter-${category.toLowerCase().replace(' ', '-')}`}
                 class="filter-btn px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:opacity-80 transition-colors"
               >
                 {category}
@@ -163,8 +163,8 @@ const gallery = await Promise.all(
           {
             items.map((item, i) => (
               <div
-                class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? "hidden opacity-50 cursor-not-allowed" : ""}`}
-                data-category={item.category.toLowerCase().replace(" ", "-")}
+                class={`item-card bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.sold ? 'hidden opacity-50 cursor-not-allowed' : ''}`}
+                data-category={item.category.toLowerCase().replace(' ', '-')}
                 data-sold={item.sold}
               >
                 <div id="my-gallery">
@@ -203,22 +203,20 @@ const gallery = await Promise.all(
                       {item.price}
                     </span>
                   </div>
-                  <div class="flex items-center space-x-4 mb-3">
+                  <div class="flex items-center space-x-4">
                     <span class="text-sm text-gray-500">{item.category}</span>
                     <span
                       class={`px-2 py-1 rounded-full text-xs font-medium ${
-                        item.condition.toLowerCase() === "excellent"
-                          ? "bg-green-100 text-green-800"
-                          : item.condition.toLowerCase() === "good"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-orange-100 text-orange-800"
+                        item.condition.toLowerCase() === 'excellent'
+                          ? 'bg-green-100 text-green-800'
+                          : item.condition.toLowerCase() === 'good'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-orange-100 text-orange-800'
                       }`}
                     >
                       {item.condition}
                     </span>
                   </div>
-                  <p class="text-gray-600 text-sm ">{item.description}</p>
-
                   {item.newProductUrl ? (
                     <Popover id="default-popover" trigger="View new product">
                       <LinkPreview id={item.newProductUrl} />
@@ -227,7 +225,7 @@ const gallery = await Promise.all(
                     <p class="h-12" />
                   )}
                   <button
-                    class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? "cursor-not-allowed opacity-50" : ""}`}
+                    class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? 'cursor-not-allowed opacity-50' : ''}`}
                     data-number={siteContent.whatsAppNumber}
                     disabled={item.sold}
                     id="inquire-button"
@@ -247,10 +245,10 @@ const gallery = await Promise.all(
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
         <p>
           Last updated: {
-            today.toLocaleDateString("en-US", {
-              hour: "2-digit",
-              month: "long",
-              day: "numeric",
+            today.toLocaleDateString('en-US', {
+              hour: '2-digit',
+              month: 'long',
+              day: 'numeric',
             })
           }
         </p>
@@ -263,13 +261,13 @@ const gallery = await Promise.all(
       </div>
 
       <script>
-        import JSConfetti from "js-confetti";
+        import JSConfetti from 'js-confetti';
         const jsConfetti = new JSConfetti();
 
         // Audio toggle functionality
-        const audioToggle = document.getElementById("audioToggle")!;
+        const audioToggle = document.getElementById('audioToggle')!;
         const backgroundAudio = document.getElementById(
-          "backgroundAudio"
+          'backgroundAudio',
         ) as HTMLAudioElement;
         let isPlaying = false;
 
@@ -277,13 +275,13 @@ const gallery = await Promise.all(
           if (!isPlaying) return;
           jsConfetti
             .addConfetti({
-              emojis: ["🏠", "🛋️", "🪑", "🛏️", "🖼️", "💸", "💰", "🎉", "✨"],
+              emojis: ['🏠', '🛋️', '🪑', '🛏️', '🖼️', '💸', '💰', '🎉', '✨'],
               emojiSize: 50,
             })
             .then(() => setTimeout(confettiMachine, 1000));
         };
 
-        audioToggle.addEventListener("click", () => {
+        audioToggle.addEventListener('click', () => {
           if (isPlaying) {
             backgroundAudio.pause();
             audioToggle.innerHTML =
@@ -294,7 +292,7 @@ const gallery = await Promise.all(
               .play()
               .then(confettiMachine)
               .catch(() => {
-                console.log("Audio play failed - user interaction required");
+                console.log('Audio play failed - user interaction required');
               });
             audioToggle.innerHTML =
               '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span>Pause Music</span>';
@@ -303,26 +301,26 @@ const gallery = await Promise.all(
         });
 
         // Filter functionality
-        const filterButtons = document.querySelectorAll(".filter-btn");
-        const itemCards = document.querySelectorAll<HTMLElement>(".item-card");
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const itemCards = document.querySelectorAll<HTMLElement>('.item-card');
 
         filterButtons.forEach((button) => {
-          button.addEventListener("click", () => {
+          button.addEventListener('click', () => {
             // Update active button
             filterButtons.forEach((btn) =>
-              btn.classList.remove("active", "bg-blue-900", "text-white")
+              btn.classList.remove('active', 'bg-blue-900', 'text-white'),
             );
-            button.classList.add("active", "bg-blue-900", "text-white");
+            button.classList.add('active', 'bg-blue-900', 'text-white');
 
             // Get filter category
-            const filter = button.id.replace("filter-", "");
+            const filter = button.id.replace('filter-', '');
 
             // Show/hide items
             itemCards.forEach((card) => {
-              if (filter === "all" || card.dataset.category === filter) {
-                card.style.display = "block";
+              if (filter === 'all' || card.dataset.category === filter) {
+                card.style.display = 'block';
               } else {
-                card.style.display = "none";
+                card.style.display = 'none';
               }
             });
           });
@@ -330,43 +328,43 @@ const gallery = await Promise.all(
 
         // Item inquiry handling
         document
-          .querySelectorAll(".item-card #inquire-button")
+          .querySelectorAll('.item-card #inquire-button')
           .forEach((button) => {
-            button.addEventListener("click", function (this: HTMLElement) {
-              const itemCard = this.closest(".item-card")!;
-              const itemName = itemCard.querySelector("h3")?.textContent;
+            button.addEventListener('click', function (this: HTMLElement) {
+              const itemCard = this.closest('.item-card')!;
+              const itemName = itemCard.querySelector('h3')?.textContent;
               const itemPrice =
-                itemCard.querySelector(".text-2xl")?.textContent;
+                itemCard.querySelector('.text-2xl')?.textContent;
               const body = encodeURIComponent(
-                `Hey 👋 I'm interested in the ${itemName?.trim()} listed for ${itemPrice?.trim()}. Is it still available?`
+                `Hey 👋 I'm interested in the ${itemName?.trim()} listed for ${itemPrice?.trim()}. Is it still available?`,
               );
               const number = this.dataset.number;
 
               if (!number) {
                 return alert(
-                  "WhatsApp number not found. Please contact us directly."
+                  'WhatsApp number not found. Please contact us directly.',
                 );
               }
 
-              window.open(`https://wa.me/${number}?text=${body}`, "_blank");
+              window.open(`https://wa.me/${number}?text=${body}`, '_blank');
             });
           });
 
         document
-          .getElementById("filter-sold-items")!
-          .addEventListener("change", function (this: HTMLInputElement) {
+          .getElementById('filter-sold-items')!
+          .addEventListener('change', function (this: HTMLInputElement) {
             itemCards.forEach((card) => {
-              if (this.checked && card.dataset.sold === "true") {
-                card.style.display = "none";
+              if (this.checked && card.dataset.sold === 'true') {
+                card.style.display = 'none';
               } else {
-                card.style.display = "block";
+                card.style.display = 'block';
               }
             });
           });
       </script>
 
       <script>
-        import "../scripts/load-gallery.js";
+        import '../scripts/load-gallery.js';
       </script>
     </footer>
   </body>
