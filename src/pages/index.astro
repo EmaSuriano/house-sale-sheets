@@ -296,44 +296,44 @@ const gallery = await Promise.all(
       </div>
 
       <script>
-        import JSConfetti from 'js-confetti';
-        const jsConfetti = new JSConfetti();
+        // import JSConfetti from 'js-confetti';
+        // const jsConfetti = new JSConfetti();
 
         // Audio toggle functionality
-        const audioToggle = document.getElementById('audioToggle')!;
-        const backgroundAudio = document.getElementById(
-          'backgroundAudio',
-        ) as HTMLAudioElement;
-        let isPlaying = false;
+        // const audioToggle = document.getElementById('audioToggle')!;
+        // const backgroundAudio = document.getElementById(
+        //   'backgroundAudio',
+        // ) as HTMLAudioElement;
+        // let isPlaying = false;
 
-        const confettiMachine = () => {
-          if (!isPlaying) return;
-          jsConfetti
-            .addConfetti({
-              emojis: ['🏠', '🛋️', '🪑', '🛏️', '🖼️', '💸', '💰', '🎉', '✨'],
-              emojiSize: 50,
-            })
-            .then(() => setTimeout(confettiMachine, 1000));
-        };
+        // const confettiMachine = () => {
+        //   if (!isPlaying) return;
+        //   jsConfetti
+        //     .addConfetti({
+        //       emojis: ['🏠', '🛋️', '🪑', '🛏️', '🖼️', '💸', '💰', '🎉', '✨'],
+        //       emojiSize: 50,
+        //     })
+        //     .then(() => setTimeout(confettiMachine, 1000));
+        // };
 
-        audioToggle.addEventListener('click', () => {
-          if (isPlaying) {
-            backgroundAudio.pause();
-            audioToggle.innerHTML =
-              '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Play Music</span>';
-            isPlaying = false;
-          } else {
-            backgroundAudio
-              .play()
-              .then(confettiMachine)
-              .catch(() => {
-                console.log('Audio play failed - user interaction required');
-              });
-            audioToggle.innerHTML =
-              '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span>Pause Music</span>';
-            isPlaying = true;
-          }
-        });
+        // audioToggle.addEventListener('click', () => {
+        //   if (isPlaying) {
+        //     backgroundAudio.pause();
+        //     audioToggle.innerHTML =
+        //       '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Play Music</span>';
+        //     isPlaying = false;
+        //   } else {
+        //     backgroundAudio
+        //       .play()
+        //       .then(confettiMachine)
+        //       .catch(() => {
+        //         console.log('Audio play failed - user interaction required');
+        //       });
+        //     audioToggle.innerHTML =
+        //       '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span>Pause Music</span>';
+        //     isPlaying = true;
+        //   }
+        // });
 
         // Filter functionality
         const filterButtons = document.querySelectorAll('.filter-btn');
