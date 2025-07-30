@@ -38,7 +38,7 @@ const gallery = await Promise.all(
       }
     </style>
   </head>
-  <body class="bg-gray-50 min-h-screen">
+  <body class="min-h-screen" style="background-color: var(--kleinanzeigen-bg);">
     <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,18 +46,22 @@ const gallery = await Promise.all(
           <div class="flex items-center space-x-2">
             <Icon
               name="mdi:home"
-              class="w-8 h-8 text-blue-800"
+              class="w-8 h-8"
+              style="color: var(--kleinanzeigen-green);"
               fill="currentColor"
             />
 
-            <h1 class="text-2xl font-bold text-gray-900">
+            <h1 class="text-2xl font-bold" style="color: var(--kleinanzeigen-text);">
               {siteContent.siteTitle}
             </h1>
           </div>
           <div class="flex items-center space-x-4">
             <button
               id="audioToggle"
-              class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 bg-red-600 text-white font-medium hover:bg-red-700 border border-red-600 relative group"
+              class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-white font-medium relative group"
+              style="background-color: var(--kleinanzeigen-green); border: 1px solid var(--kleinanzeigen-green);"
+              onmouseover="this.style.backgroundColor='var(--kleinanzeigen-dark-green)'"
+              onmouseout="this.style.backgroundColor='var(--kleinanzeigen-green)'"
             >
               <Icon name="mdi:play" class="w-4 h-4" fill="currentColor" />
               <span>Play Music</span>
@@ -74,7 +78,10 @@ const gallery = await Promise.all(
             </button>
             <a
               href="#items"
-              class="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors hidden sm:inline-block"
+              class="text-white px-4 py-2 rounded-lg transition-colors hidden sm:inline-block"
+              style="background-color: var(--kleinanzeigen-green);"
+              onmouseover="this.style.backgroundColor='var(--kleinanzeigen-dark-green)'"
+              onmouseout="this.style.backgroundColor='var(--kleinanzeigen-green)'"
             >
               View Items
             </a>
@@ -90,22 +97,22 @@ const gallery = await Promise.all(
     </audio>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+    <section class="py-16" style="background: linear-gradient(to bottom right, var(--kleinanzeigen-light-green), #f0fdf4);">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        <h2 class="text-4xl font-bold mb-4" style="color: var(--kleinanzeigen-text);">
           {siteContent.heroTitle}
         </h2>
-        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: var(--kleinanzeigen-light-text);">
           {siteContent.heroSubtitle}
         </p>
         <div
           class="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <div class="flex items-center space-x-2 text-green-600">
+          <div class="flex items-center space-x-2" style="color: var(--kleinanzeigen-green);">
             <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
             <span class="font-medium">All items available for viewing</span>
           </div>
-          <div class="flex items-center space-x-2 text-green-600">
+          <div class="flex items-center space-x-2" style="color: var(--kleinanzeigen-green);">
             <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
             <span class="font-medium">Cash or PayPal accepted</span>
           </div>
@@ -119,7 +126,8 @@ const gallery = await Promise.all(
         <div class="flex flex-wrap gap-2 justify-center">
           <button
             id="filter-all"
-            class="filter-btn active bg-blue-900 text-white px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:opacity-80 transition-colors"
+            class="filter-btn active text-white px-4 py-2 rounded-full text-sm font-medium hover:opacity-80 transition-colors"
+            style="background-color: var(--kleinanzeigen-green); border: 1px solid var(--kleinanzeigen-green);"
           >
             All Items
           </button>
@@ -127,7 +135,8 @@ const gallery = await Promise.all(
             categories.map((category) => (
               <button
                 id={`filter-${category.toLowerCase().replace(' ', '-')}`}
-                class="filter-btn px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:opacity-80 transition-colors"
+                class="filter-btn px-4 py-2 rounded-full text-sm font-medium hover:opacity-80 transition-colors"
+                style="border: 1px solid var(--kleinanzeigen-border); color: var(--kleinanzeigen-text);"
               >
                 {category}
               </button>
@@ -180,15 +189,15 @@ const gallery = await Promise.all(
 
                 <div class={`p-6`}>
                   <div class="flex justify-between items-start mb-2">
-                    <h3 class={`text-lg font-semibold text-gray-900`}>
+                    <h3 class={`text-lg font-semibold`} style="color: var(--kleinanzeigen-text);">
                       {item.name}
                     </h3>
-                    <span class="text-2xl font-bold text-blue-800">
+                    <span class="text-2xl font-bold" style="color: var(--kleinanzeigen-green);">
                       {item.price}
                     </span>
                   </div>
                   <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-500">{item.category}</span>
+                    <span class="text-sm" style="color: var(--kleinanzeigen-light-text);">{item.category}</span>
                     <span
                       class={`px-2 py-1 rounded-full text-xs font-medium ${
                         item.condition.toLowerCase() === 'excellent'
@@ -207,7 +216,8 @@ const gallery = await Promise.all(
                         href={item.newProductUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="underline text-blue-800 cursor-pointer"
+                        class="underline cursor-pointer"
+                        style="color: var(--kleinanzeigen-green);"
                       >
                         View new product
                       </a>
@@ -215,7 +225,10 @@ const gallery = await Promise.all(
                   </div>
 
                   <button
-                    class={`w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium ${item.sold ? 'cursor-not-allowed opacity-50' : ''}`}
+                    class={`w-full text-white py-2 px-4 rounded-lg transition-colors font-medium ${item.sold ? 'cursor-not-allowed opacity-50' : ''}`}
+                    style="background-color: var(--kleinanzeigen-green);"
+                    onmouseover="if (!this.disabled) this.style.backgroundColor='var(--kleinanzeigen-dark-green)'"
+                    onmouseout="if (!this.disabled) this.style.backgroundColor='var(--kleinanzeigen-green)'"
                     data-number={siteContent.whatsAppNumber}
                     disabled={item.sold}
                     id="inquire-button"
@@ -231,7 +244,7 @@ const gallery = await Promise.all(
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-8">
+    <footer class="py-8" style="background-color: var(--kleinanzeigen-text); color: var(--kleinanzeigen-light-text);">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
         <p>
           Last updated: {
@@ -245,7 +258,8 @@ const gallery = await Promise.all(
         <p class="mt-2">
           Made with extra time at work by <a
             href="https://emasuriano.com/"
-            class="underline cursor-pointer">EmaSuriano</a
+            class="underline cursor-pointer"
+            style="color: var(--kleinanzeigen-green);">EmaSuriano</a
           >
         </p>
       </div>
@@ -297,10 +311,15 @@ const gallery = await Promise.all(
         filterButtons.forEach((button) => {
           button.addEventListener('click', () => {
             // Update active button
-            filterButtons.forEach((btn) =>
-              btn.classList.remove('active', 'bg-blue-900', 'text-white'),
-            );
-            button.classList.add('active', 'bg-blue-900', 'text-white');
+            filterButtons.forEach((btn) => {
+              btn.classList.remove('active', 'text-white');
+              (btn as HTMLElement).style.backgroundColor = 'transparent';
+              (btn as HTMLElement).style.borderColor = 'var(--kleinanzeigen-border)';
+              (btn as HTMLElement).style.color = 'var(--kleinanzeigen-text)';
+            });
+            button.classList.add('active', 'text-white');
+            (button as HTMLElement).style.backgroundColor = 'var(--kleinanzeigen-green)';
+            (button as HTMLElement).style.borderColor = 'var(--kleinanzeigen-green)';
 
             // Get filter category
             const filter = button.id.replace('filter-', '');

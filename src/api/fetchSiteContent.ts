@@ -5,8 +5,6 @@ const SiteContentSchema = z.object({
   heroTitle: z.string(),
   heroSubtitle: z.string(),
   whatsAppNumber: z.string(),
-  viewingInfo: z.string(),
-  location: z.string(),
   siteTitle: z.string(),
 });
 
