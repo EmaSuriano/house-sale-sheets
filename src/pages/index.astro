@@ -28,7 +28,7 @@ const gallery = await Promise.all(
     <link
       rel="icon"
       type="image/svg+xml"
-      href="/house-sale-sheets/favicon.svg"
+      href="/my-kleinanzeigen/favicon.svg"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{siteContent.siteTitle} - Quality Furniture & Items</title>
@@ -51,7 +51,10 @@ const gallery = await Promise.all(
               fill="currentColor"
             />
 
-            <h1 class="text-2xl font-bold" style="color: var(--kleinanzeigen-text);">
+            <h1
+              class="text-2xl font-bold"
+              style="color: var(--kleinanzeigen-text);"
+            >
               {siteContent.siteTitle}
             </h1>
           </div>
@@ -92,27 +95,42 @@ const gallery = await Promise.all(
 
     <!-- Audio Element -->
     <audio id="backgroundAudio" preload="metadata" loop>
-      <source src="/house-sale-sheets/donki.mp3" type="audio/mpeg" />
+      <source src="/my-kleinanzeigen/donki.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
 
     <!-- Hero Section -->
-    <section class="py-16" style="background: linear-gradient(to bottom right, var(--kleinanzeigen-light-green), #f0fdf4);">
+    <section
+      class="py-16"
+      style="background: linear-gradient(to bottom right, var(--kleinanzeigen-light-green), #f0fdf4);"
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl font-bold mb-4" style="color: var(--kleinanzeigen-text);">
+        <h2
+          class="text-4xl font-bold mb-4"
+          style="color: var(--kleinanzeigen-text);"
+        >
           {siteContent.heroTitle}
         </h2>
-        <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: var(--kleinanzeigen-light-text);">
+        <p
+          class="text-xl mb-8 max-w-2xl mx-auto"
+          style="color: var(--kleinanzeigen-light-text);"
+        >
           {siteContent.heroSubtitle}
         </p>
         <div
           class="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <div class="flex items-center space-x-2" style="color: var(--kleinanzeigen-green);">
+          <div
+            class="flex items-center space-x-2"
+            style="color: var(--kleinanzeigen-green);"
+          >
             <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
             <span class="font-medium">All items available for viewing</span>
           </div>
-          <div class="flex items-center space-x-2" style="color: var(--kleinanzeigen-green);">
+          <div
+            class="flex items-center space-x-2"
+            style="color: var(--kleinanzeigen-green);"
+          >
             <Icon name="mdi:check-circle" class="w-5 h-5" fill="currentColor" />
             <span class="font-medium">Cash or PayPal accepted</span>
           </div>
@@ -189,15 +207,26 @@ const gallery = await Promise.all(
 
                 <div class={`p-6`}>
                   <div class="flex justify-between items-start mb-2">
-                    <h3 class={`text-lg font-semibold`} style="color: var(--kleinanzeigen-text);">
+                    <h3
+                      class={`text-lg font-semibold`}
+                      style="color: var(--kleinanzeigen-text);"
+                    >
                       {item.name}
                     </h3>
-                    <span class="text-2xl font-bold" style="color: var(--kleinanzeigen-green);">
+                    <span
+                      class="text-2xl font-bold"
+                      style="color: var(--kleinanzeigen-green);"
+                    >
                       {item.price}
                     </span>
                   </div>
                   <div class="flex items-center space-x-4">
-                    <span class="text-sm" style="color: var(--kleinanzeigen-light-text);">{item.category}</span>
+                    <span
+                      class="text-sm"
+                      style="color: var(--kleinanzeigen-light-text);"
+                    >
+                      {item.category}
+                    </span>
                     <span
                       class={`px-2 py-1 rounded-full text-xs font-medium ${
                         item.condition.toLowerCase() === 'excellent'
@@ -244,7 +273,10 @@ const gallery = await Promise.all(
     </section>
 
     <!-- Footer -->
-    <footer class="py-8" style="background-color: var(--kleinanzeigen-text); color: var(--kleinanzeigen-light-text);">
+    <footer
+      class="py-8"
+      style="background-color: var(--kleinanzeigen-text); color: var(--kleinanzeigen-light-text);"
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
         <p>
           Last updated: {
@@ -314,12 +346,15 @@ const gallery = await Promise.all(
             filterButtons.forEach((btn) => {
               btn.classList.remove('active', 'text-white');
               (btn as HTMLElement).style.backgroundColor = 'transparent';
-              (btn as HTMLElement).style.borderColor = 'var(--kleinanzeigen-border)';
+              (btn as HTMLElement).style.borderColor =
+                'var(--kleinanzeigen-border)';
               (btn as HTMLElement).style.color = 'var(--kleinanzeigen-text)';
             });
             button.classList.add('active', 'text-white');
-            (button as HTMLElement).style.backgroundColor = 'var(--kleinanzeigen-green)';
-            (button as HTMLElement).style.borderColor = 'var(--kleinanzeigen-green)';
+            (button as HTMLElement).style.backgroundColor =
+              'var(--kleinanzeigen-green)';
+            (button as HTMLElement).style.borderColor =
+              'var(--kleinanzeigen-green)';
 
             // Get filter category
             const filter = button.id.replace('filter-', '');

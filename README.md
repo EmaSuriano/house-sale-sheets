@@ -10,8 +10,8 @@ This project helps organize and create professional house sale sheets and relate
 
 ```bash
 # Clone the repository
-git clone https://github.com/EmaSuriano/house-sale-sheets.git
-cd house-sale-sheets
+git clone https://github.com/EmaSuriano/my-kleinanzeigen.git
+cd my-kleinanzeigen
 
 # Install dependencies
 npm install
@@ -93,7 +93,7 @@ These secrets will be available during the build process and can be used to gene
 
 ### Automatic Deployment
 
-Once configured, GitHub Pages will automatically rebuild and deploy your site whenever you push changes to the selected branch. The site will be available at `https://yourusername.github.io/house-sale-sheets/`.
+Once configured, GitHub Pages will automatically rebuild and deploy your site whenever you push changes to the selected branch. The site will be available at `https://yourusername.github.io/my-kleinanzeigen/`.
 
 ## Automated Deployment with Apps Script
 
@@ -115,33 +115,33 @@ function onEdit(e) {
 
 function triggerGitHubWorkflow() {
   const GITHUB_TOKEN =
-    PropertiesService.getScriptProperties().getProperty("GITHUB_TOKEN");
-  const OWNER = "EmaSuriano";
-  const REPO = "house-sale-sheets";
-  const WORKFLOW_ID = "ci.yml";
+    PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  const OWNER = 'EmaSuriano';
+  const REPO = 'my-kleinanzeigen';
+  const WORKFLOW_ID = 'ci.yml';
 
   const url = `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_ID}/dispatches`;
 
   const payload = {
-    ref: "main", // branch to run workflow on
+    ref: 'main', // branch to run workflow on
     inputs: {}, // optional inputs if your workflow accepts them
   };
 
   const options = {
-    method: "POST",
+    method: 'POST',
     headers: {
       Authorization: `token ${GITHUB_TOKEN}`,
-      Accept: "application/vnd.github.v3+json",
-      "Content-Type": "application/json",
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
     },
     payload: JSON.stringify(payload),
   };
 
   try {
     const response = UrlFetchApp.fetch(url, options);
-    console.log("Workflow triggered:", response.getResponseCode());
+    console.log('Workflow triggered:', response.getResponseCode());
   } catch (error) {
-    console.error("Error triggering workflow:", error);
+    console.error('Error triggering workflow:', error);
   }
 }
 ```
